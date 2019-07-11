@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome to Fast Resataurant</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/materialize.css">
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">List of the restaurants in the app</h1>
+        <ul class="collection">
+
+            <li class="collection-item avatar">
+                <i class="material-icons circle">folder</i>
+                <span class="title" id="name">Name </span>
+                <p id="location">Location </p>
+                <a href="#!" class="secondary-content"><i class="material-icons"
+                        style="margin-right: 2rem;">delete</i></a>
+                <a href="#!" class="secondary-content"><i class="material-icons">system_update_alt </i></a>
+            </li>
+
+        </ul>
+
+        <a class="waves-effect waves-teal btn-flat">Create new</a>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        // event.preventDefault();
+        $.ajax("/restaurants", {
+            type: "GET"
+        }).then(function (data) {
+            var name = $("#name");
+            var location = $("#location");
+
+            var rest = data.new_restaurant;
+            var len = rest.length;
+
+            for (var i = 0; i < len; i++) {
+                var new_elem = "<li class='collection-item avatar' >"
+                    + "<span class='title'>" + rest[i].restaurant_name +
+                    "<p>" + rest[i].location + "</p>";
+
+                    new_elem += "<a class='secondary-content'><i class='material-icons' style='margin-right: 2rem;'>delete</i></a>"
+
+            }
+        })
+
+
+
+
+    })
+</script>
+
+</html>

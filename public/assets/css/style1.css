@@ -1,0 +1,204 @@
+.title{
+    font-family: 'Montserrat Alternates', sans-serif;
+    color: white;
+    margin :0% !important;
+    position : absolute;
+    top :40%;
+}
+
+#fadeOut {
+    position: absolute;
+    width:60%;
+    height:70%;
+    top:15%;
+    left:20%;
+    z-index: 10;
+
+}
+
+.pic {
+    margin-left: 39%;
+    margin-bottom: -7%;
+    margin-top: -4%;
+}
+
+#loginScreen {
+    margin-left: 30%;
+    margin-top: 10%;
+    position: relative;
+}
+
+#page-title{
+    margin-left: 8%;
+}
+
+.menu-class{
+    margin-left: 18%;
+}
+
+.instructions {
+margin-left: 29%;
+
+}
+
+#canvas {
+    margin-left: 35%;
+}
+
+.title{
+    font-family: 'Montserrat Alternates', sans-serif;
+  color:whitesmoke;
+    font-size: 35px;
+    border-bottom: solid  2px lightgray;
+   padding: 0px 20px 0px 20px;
+}
+.header-nav{
+    background-color: white;
+}
+.cart-container-side
+{
+    float:right;
+    border-left: solid 2px lightgrey;
+    height:100vh;
+   
+}
+
+.section-header{
+
+    padding:0px 20px 0px 20px;
+    text-align: center;
+    /* font-family: 'Montserrat Alternates', sans-serif; */
+color:RED
+}
+
+
+.cart-quantity-input
+{
+border: solid 1px rgb(211, 214, 216);
+font-size:10px; 
+
+}
+
+input[type=number]
+{
+    margin-top :2%;
+    padding-top : 5%;
+    border-bottom : 2px solid lightgray; 
+}
+.cart-row{
+
+   margin-top :2%;
+   padding-top : 5%;
+   border-bottom : 1px solid lightgray;
+   font-size: 16px;
+   line-height: 1.15;
+}
+.cart-total-price
+{
+    float: right;
+}
+.btn-purchase
+{
+    margin-top:20px;
+    width:100%;
+    height: 50px;
+    margin-bottom: 25px;
+    background-color: rgb(11, 221, 11);
+    color:white;
+}
+
+.cart-item-title{
+    font-size: 16px;
+}
+
+.cart-item{
+    padding-top :2%;
+}
+
+#items{
+width:100%;
+height:100%;
+}
+
+.horizontal{
+width:100%;
+height:100%;
+    margin:0%;
+}
+
+.card{
+    width:100%;
+height:100%;
+    margin-left:0% !important;
+margin-right:20px !important;
+}
+
+.card-full{
+    width:100% !important;
+}
+
+.card-content{
+    font: 14px;
+    line-height: 1.5;
+text-align: center;
+padding: 10px 20px 0px 20px !important;
+}
+
+.card-title
+{
+    font-size: 18px !important;
+    font-weight: bold;
+}
+
+.ingredients
+{
+    font-size: 14px ; 
+    height: 60px;
+}
+.title-row
+{
+    margin-bottom: 0% !important;
+}
+
+.cart-items
+{
+    margin-bottom: 25px;
+}
+
+#rest-img{
+    width:100%;
+    height:100% !important;
+}
+
+.restaurant-row{
+    height: 250px !important;
+}
+
+.address{
+    font-family: 'Montserrat Alternates', sans-serif;
+    color: white;
+    margin :0% !important;
+    position : absolute;
+    top :50%;
+    left :2%;
+}
+
+.phone
+{
+
+    font-family: 'Montserrat Alternates', sans-serif;
+    color: white;
+    margin :0% !important;
+    position : absolute;
+    top :55%;
+    left:2%
+}
+
+.email{
+    font-family: 'Montserrat Alternates', sans-serif;
+    color: white;
+    margin :0% !important;
+    position : absolute;
+    top :55%;
+    left :10%;
+}

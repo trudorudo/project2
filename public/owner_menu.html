@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Jakal</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=B612+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/materialize.css">
+  <!-- Compiled and minified CSS -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+  <a name="top"></a>
+  <nav class="header-nav">
+    <div class="nav-wrapper ">
+      <a href="https://jakal.herokuapp.com" class="brand-logo"><img src="https://i.imgur.com/xSbQ2wU.png"
+          style="width:50px; height:50px; margin-left: 2rem;" title="Jackal" alt="Jakal"></a>
+
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <i href="#" class="material-icons" style="color: grey; margin-right: 5rem;font-size: 2rem;">person_outline</i>
+      </ul>
+    </div>
+  </nav>
+
+  <div id="bg"></div>
+
+  <div class="container">
+    <div class='row'>
+      <div class="col s12 items-container" style="margin-left: 5rem;">
+        <!-- <div class='row restaurant-row'> -->
+        <div id="info">
+          <h1 class="title" id="page-title"></h1>
+          <p class="address"></p>
+          <p class="phone"></p>
+          <p class="email"></p>
+        </div>
+        <!-- </div> -->
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <div class="col s12 m12 anchorDiv">
+        <a href="#Appetizer's" class="title anchor">Appetizer's</a>
+        <a>|</a>
+        <a href="#Entree's" class="title anchor">Entree's</a>
+        <a>|</a>
+        <a href="#Sides" class="title anchor">Sides</a>
+        <a>|</a>
+        <a href="#Desserts" class="title anchor">Desserts</a>
+        <a>|</a>
+        <a href="#Beverages" class="title anchor">Beverages</a>
+      </div>
+      <br>
+      <br>
+      <br>
+      <div class='row row-items categoryRow'>
+        <!-- style="padding-left: 6rem;" -->
+        <div class=' appetizer category'>
+          <a name="Appetizers"></a>
+          <h3 class="cath3 h35">Appetizers</h3>
+          <div class="row" id="appetizer-items">
+          </div>
+          <div class='  entree category'>
+            <a name="Entree's"></a>
+            <h3 class="cath3 h31">Entree's</h3>
+            <div class="row" id="entree-items"></div>
+          </div>
+          <div class='sides category'>
+            <a name="Sides"></a>
+            <h3 class="cath3 h32">Sides</h3>
+            <div class="row" id="sides-items"></div>
+          </div>
+          <div class='   desserts category'>
+            <a name="Desserts"></a>
+            <h3 class="cath3 h33">Desserts</h3>
+            <div class="row" id="dessert-items"></div>
+          </div>
+          <div class='   beverages category'>
+            <a name="Beverages"></a>
+            <h3 class="cath3 h34">Beverages</h3>
+            <div class="row" id="beverages-items"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottomAnchor">
+      <a href="#top" class="anchor title">Top</a>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <footer class="page-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">Contact US</h5>
+          <p class="grey-text text-lighten-4">+1 (908) 1234</p>
+          <p class="grey-text text-lighten-4">jacal@fastrest.com</p>
+          <p class="grey-text text-lighten-4">Jersey City, Grand St. 3,647</p>
+        </div>
+        <div class="col l4 offset-l2 s12">
+          <h5 class="white-text">Links</h5>
+          <ul>
+            <li><a class="grey-text text-lighten-3" href="#!">About Us</a></li>
+            <li><a class="grey-text text-lighten-3" href="#!">FAQ</a></li>
+            <li><a class="grey-text text-lighten-3" href="#!">Investor Relations</a></li>
+            <li><a class="grey-text text-lighten-3" href="#!">Careers</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+        © 2019 JAKAL All rights reserved.
+
+      </div>
+    </div>
+  </footer>
+</body>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    $('.dropdown-trigger').dropdown();
+  });
+  const restaurantId =
+    window.location.search.split('=')[1];
+  if (restaurantId) {
+    fetch(`/api/restaurants/${restaurantId}`).then(res => res.json()).then(restaurant => {
+
+      const div = document.querySelector('#bg');
+      const background = document.createElement("div");
+
+      background.innerHTML = `
+        <div  style=" width: 100%; height: 300px; background-image: url('${restaurant.image_url}');background-size: cover; background-repeat: no-repeat;background-position: 50% 50%;"></div>
+        `;
+      div.append(background);
+      document.querySelector('#page-title').innerHTML = restaurant.restaurant_name;
+      document.querySelector('.address').innerHTML = restaurant.location;
+      document.querySelector('.phone').innerHTML = restaurant.phone_number;
+      document.querySelector('.email').innerHTML = restaurant.email;
+      // document.getElementById("rest-img").src = restaurant.image_url;
+      fetch(`/api/restaurants/${restaurantId}/menu-items`).then(res => res.json()).then(items => {
+        console.log('restaurant items', items);
+        const ul = document.querySelector('#items');
+        items.forEach(item => {
+          // console.log("item-cat" + item.category);
+          switch (item.category) {
+            case "appetizer's":
+              const ul = document.querySelector('#appetizer-items');
+              const li = document.createElement('div');
+              li.className += "col s10 m4"
+              li.innerHTML = `    
+                        <div class="card card-full">
+                        <div class="card-image">
+                        <img class='shop-item-image' src=${item.image_url} height=200 />
+                        <a class="btn-floating halfway-fab waves-effect waves-light red delete"  data-id="${item.item_id}"><i class="material-icons">remove</i></a>
+                        </div>
+                        <div class="card-content">
+                        <div class='row title-row'>
+                        <div class="col s12">
+                        <span class="card-title">${item.item_name} - $${item.price}</span>
+                        </div>
+                        </div>
+                        <p class="ingredients">${item.ingredients}</p>
+                        </div>
+                       <img src="https://image.shutterstock.com/image-vector/4-star-rating-bar-260nw-1071196463.jpg" class="star">
+                       </div>
+                       </div>
+             
+                    `;
+              ul.append(li);
+
+              break;
+            case 'entrees':
+              const ule = document.querySelector('#entree-items');
+              const lie = document.createElement('div');
+              lie.className += "col s10 m4"
+              lie.innerHTML = `
+                      
+
+             
+        
+          <div class="card card-full">
+            <div class="card-image">
+                <img class='shop-item-image' src=${item.image_url} height=200 />
+       
+              <a class="btn-floating halfway-fab waves-effect waves-light red delete"  data-id="${item.item_id}"><i class="material-icons">remove</i></a>
+            </div>
+            <div class="card-content">
+                <div class='row title-row'>
+                    <div class="col s12">
+                        <span class="card-title">${item.item_name} - $${item.price}</span>
+                        
+                    </div>
+
+                </div>
+
+                <p class="ingredients">${item.ingredients}</p>
+            </div>
+            <img src="https://image.shutterstock.com/image-vector/4-star-rating-bar-260nw-1071196463.jpg" class="star">
+          </div>
+        </div>
+             
+                    `;
+              ule.append(lie);
+
+              break;
+            case 'sides':
+              const uls = document.querySelector('#sides-items');
+              const lis = document.createElement('div');
+              lis.className += "col s10 m4"
+              lis.innerHTML = `
+                      
+
+             
+      
+          <div class="card card-full">
+            <div class="card-image">
+                <img class='shop-item-image' src=${item.image_url} height=200>
+                <a class="btn-floating halfway-fab waves-effect waves-light red delete"  data-id="${item.item_id}"><i class="material-icons">remove</i></a>
+            </div>
+            <div class="card-content">
+                <div class='row title-row'>
+                    <div class="col s12">
+                        <span class="card-title">${item.item_name} - $${item.price}</span>
+                    </div>
+
+                </div>
+
+                <p class="ingredients">${item.ingredients}</p>
+            </div>
+            <img src="https://image.shutterstock.com/image-vector/4-star-rating-bar-260nw-1071196463.jpg" class="star">
+          </div>
+        </div>
+             
+                    `;
+              uls.append(lis);
+
+              break;
+            case 'deserts':
+              const uld = document.querySelector('#dessert-items');
+              const lid = document.createElement('div');
+              lid.className += "col s10 m4"
+              lid.innerHTML = `
+                      
+
+             
+      
+          <div class="card card-full">
+            <div class="card-image">
+                <img class='shop-item-image' src=${item.image_url} height=200 />
+                <a class="btn-floating halfway-fab waves-effect waves-light red delete"  data-id="${item.item_id}"><i class="material-icons">remove</i></a>
+            </div>
+            <div class="card-content">
+                <div class='row title-row'>
+                    <div class="col s12">
+                        <span class="card-title">${item.item_name} - $${item.price}</span>
+                    </div>
+
+                </div>
+
+                <p class="ingredients">${item.ingredients}</p>
+            </div>
+            <img src="https://image.shutterstock.com/image-vector/4-star-rating-bar-260nw-1071196463.jpg" class="star">
+          </div>
+        </div>
+             
+                    `;
+              uld.append(lid);
+
+              break;
+            case 'beverages':
+              const ulb = document.querySelector('#beverages-items');
+              const lib = document.createElement('div');
+              lib.className += "col s10 m4"
+              lib.innerHTML = `        
+          <div class="card card-full">
+            <div class="card-image">
+                <img class='shop-item-image' src=${item.image_url} height=200 />
+                <a class="btn-floating halfway-fab waves-effect waves-light red delete"  data-id="${item.item_id}"><i class="material-icons">remove</i></a>
+            </div>
+            <div class="card-content">
+                <div class='row title-row'>
+                    <div class="col s12">
+                        <span class="card-title">${item.item_name} - $${item.price}</span>
+                    </div>
+
+                </div>
+
+                <p class="ingredients">${item.ingredients}</p>
+            </div>
+            <img src="https://image.shutterstock.com/image-vector/4-star-rating-bar-260nw-1071196463.jpg" class="star">
+          </div>
+        </div>
+             
+                    `;
+              ulb.append(lib);
+
+              break;
+            default:
+              console.log("error");
+          }
+          console.log('ccccc', document.querySelectorAll('.add-to-cart').values)
+          //                   document.getElementsByClassName('shop-item-button').addEventListener('click', function () {
+          //                        addToCartClicked();
+          //  });
+          // document.getElementsByClassName('shop-item-button').addEventListener('click', addToCartClicked);
+        });
+        var addToCartButtons = document.getElementsByClassName('shop-item-button')
+        console.log(addToCartButtons);
+        for (var i = 0; i < addToCartButtons.length; i++) {
+          var button = addToCartButtons[i]
+          button.addEventListener('click', addToCartClicked)
+          console.log(button)
+        }
+      }).catch(err => console.log('errr occured', err));
+    }).catch(err => console.log('errr occured222', err))
+  } else {
+  }
+  //delete button for each item
+  $(document).on("click", ".delete", function (event) {
+    // console.log("hello!")
+    var id = $(this).data("id");
+    if (confirm("Delete item #" + id + "?") == true) {
+      console.log("OK")
+
+      $.ajax("/api/owner-menu/" + id, {
+        type: "DELETE"
+      }).then(function () {
+        console.log("deleted item #", id);
+        // Reload the page to get the updated list
+        location.reload();
+      });
+    } else {
+      console.log("Item was not deleted")
+    }
+  });
+</script>
+<script type="text/javascript" src="./assets/js/order.js"></script>
+
+</html>

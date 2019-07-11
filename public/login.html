@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jakal</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/materialize.css">
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery.js"></script>
+<style>
+    /* @media screen and (max-width: 649px){
+    #fadeOut{width:100%;
+    height:100%;  
+margin-left: -60px;
+margin-top: -50px;
+    }
+    } */
+    @media screen and (min-width: 500px) and (max-width: 720px){
+    #fadeOut{width:100%;
+    height:100%;  
+margin-left:-100px;
+margin-top: -100px;
+    }
+    #loginScreen{
+        width: 475px;
+        height:475px;
+        margin-left: 100px;
+       
+    }
+    }
+    @media screen and (min-width: 721px) and (max-width: 1024px){
+    #fadeOut{width:100%;
+    height:100%;  
+margin-left:-140px;
+margin-top: -100px;
+    }
+    #loginScreen{
+        width: 600px;
+        height:600px;
+        margin-left: 200px;
+       
+    }
+    }
+    @media screen and (min-width: 1025px) and (max-width: 1400px){
+    #fadeOut{width:100%;
+    height:100%;  
+margin-left:-170px;
+margin-top: -70px;
+    }
+    }
+    @media screen and (min-width: 1400px) {
+    #fadeOut{width:100%;
+    height:100%;  
+margin-left:-200px;
+margin-top: -70px;
+    }
+    }
+
+
+
+</style>
+</head>
+
+<body>
+        <nav class="header-nav">
+                <div class="nav-wrapper ">
+                <a href="https://jakal.herokuapp.com" class="brand-logo"><img src="assets/images/logo.png" style="width:50px; height:50px; margin-left: 2rem;" title="Jackal" alt="Jakal"></a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <!-- <i href="#" class="material-icons" >person_outline</i> -->
+                    </ul>
+                </div>
+        </nav>
+    
+    <div class="container" id="loginScreen">
+        <div class="row">
+            <h4 class="title"> Welcome to Jakal</h4>
+            <h6 class="title"> Please, sign in or create a new account </h6>
+        </div>
+        <div class="row"></div>
+        <div class="row">
+            <form class="col s10 m8" style="border: 2px solid grey;">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input name="login" id="login" type="text" class="validate">
+                        <label for="login">User ID</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input name="password" id="password" type="password" class="validate">
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 m4">
+                        <button id="submit" class="btn waves-effect waves-light" type="submit" name="action"
+                            style="font-size: 0.8rem; margin-bottom: 0.4rem;">Sign In
+                            <i class="material-icons right">done</i>
+                        </button>
+                    </div>
+                    <div class="col s12 m4">
+                        <a href="/create-acct" class="waves-effect waves-light btn"><i class="material-icons left"
+                                >create</i>Create New</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+   
+
+    <img src="assets/images/JakalLogo1.PNG" id="fadeOut">
+
+    <script type="text/javascript">
+
+
+//Jakal Logo Disappear
+
+$("#fadeOut").fadeOut(4000);
+// var hidden = false;
+
+// setTimeout(function(){
+//     document.getElementById("fadeOut").style.visibility= hidden ? "visible" : "hidden";
+//     hidden = !hidden;
+// },2500);
+       
+      
+        // submit password and login
+        $("#submit").on("click", function (event) {
+            event.preventDefault();
+            //grab info from the form
+            var newLoginAndPassword = {
+                login: $("#login").val().trim(),
+                password: $("#password").val().trim()
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/api/login',
+                data: newLoginAndPassword,
+                success: function (data) {
+                    if (data.length) {
+                        if (data[0].role === "owner") {
+                            var loggedInUser = data[0];
+                            console.log(data[0].role);
+                            localStorage.setItem('userId', loggedInUser.user_id);
+                            window.location.href = '/my-restaurants';
+                        } else if (data[0].role === "customer") {
+                            var loggedInUser = data[0];
+                            console.log(data[0].role);
+                            localStorage.setItem('userId', loggedInUser.user_id);
+                            window.location.href = "https://jakal.herokuapp.com/qrscanner";
+                        }
+                    } else {
+                        alert("Invalid Username or Password");
+                    }
+                }
+            })
+        });
+    </script>
+</body>
+
+</html>

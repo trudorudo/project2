@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome to Fast Resataurant</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/materialize.css">
+
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+    <script type="text/javascript" src="assets/js/script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h3 class="title">To create new restaurant fill out the form</h3>
+        <!-- form to create new rest -->
+        <form class="col s6" id="create-form">
+            <!-- general inf about rest -->
+            <div class="row" id="general_inf">
+                <div class="input-field col s10 m6">
+                    <input id="restaurant_name" type="text" class="validate">
+                    <label for="restaurant_name">Name of the Resataurant</label>
+                </div>
+
+                <div class="input-field col s10 m6">
+                    <input id="location" type="text" class="validate">
+                    <label for="location">Location</label>
+                </div>
+
+                <div class="input-field col s10 m6">
+                    <input id="email" type="email" class="validate">
+                    <label for="email">Email</label>
+                </div>
+
+                <div class="input-field col s10 m6">
+                    <input id="telephone" type="tel" class="validate">
+                    <label for="telephone">Phone Number</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 m12">
+                    <input id="image_url" type="text" class="validate">
+                    <label for="image_url">Image Url</label>
+                </div>
+            </div>
+            <div class="row">
+                <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                    <i class="material-icons right">send</i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#create-form").on("submit", function (event) {
+                event.preventDefault();
+                // var name = name.replace(/[!@#$%^&*]/g, "");
+                var newRestaurant = {
+                    restaurant_name: $("#restaurant_name").val().trim(),
+                    location: $("#location").val().trim(),
+                    email: $("#email").val().trim(),
+                    owner_id: localStorage.getItem('userId'),
+                    image_url: $("#image_url").val().trim(),
+                    telephone: $("#telephone").val().trim().replace(/[!@#$%^&-()*]/g, "")
+                };
+
+                $.ajax("/api/restaurants", {
+                    type: "POST",
+                    data: newRestaurant
+                })
+                    .then(function () {
+                        console.log("New Restaurant Created");
+                    })
+                    .done(function () {
+                        alert("Your Restaurant Has Been Created!")
+                        window.location.href = "/create-menu"
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Jakal Kitchen</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/materialize.css">
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"
+        integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="header-nav">
+        <div class="nav-wrapper ">
+            <a href="https://jakal.herokuapp.com" class="brand-logo"><img src="https://i.imgur.com/xSbQ2wU.png"
+                    style="width:44px; height:47px" title="Jackal" alt="Jakal"></a>
+            <!-- <a href="#" class="brand-logo">Logo</a> -->
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <i href="#" class="material-icons">person_outline</i>
+
+
+                <!-- <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">JavaScript</a></li> -->
+            </ul>
+        </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+        <li><a href="#">Settings</a></li>
+        <br>
+        <div class="container"></div>
+            <!-- orders in the kitchen in process-->
+            <h2 class="title">Orders in process</h2>
+            <div class="row" id="orders">
+            </div>
+         
+           
+            
+       
+        </div>
+        <script>
+            $(document).ready(function () {
+
+                //sidenav is collapsible function
+                $('.sidenav').sidenav();
+                //set interval
+                var intervalId;
+                function run() {
+                    clearInterval(intervalId);
+                    intervalId = setInterval(decrement, 1000);
+                };
+                function decrement() {
+                    $("#orders").empty();
+                    //append button with new order as its recieved
+                    fetch('/api/order').then(res => res.json()).then(order_details => {
+                        console.log(order_details.accounts[0]);
+                        var order_details = order_details.accounts;
+                        var orders = document.querySelector("#orders");
+                        order_details.forEach(order => {
+                            if (order.ready == 0) {
+                                // console.log(order.item_name)
+
+                                // let date = moment(order.time).utc().utcOffset(-8).format('LTS')
+                                // console.log(date) 
+                                var ordersBtn = document.createElement('div');
+                                ordersBtn.innerHTML = `
+                     <div class="col s12 m4">
+                     <div class="row">
+                     <div class="col s12 m10">
+                     <div class="card blue-grey darken-1" data-id=${order.item_id}>
+                     <div class="card-content white-text">
+                     <span class="card-title">${order.item_name}</span>
+                     <p>Quantity: ${order.quantity}</p>
+                    //  <p>Was ordered at: ${moment(order.time).utc().utcOffset(-8).format('LTS')}</p>
+                     </div>
+                     <div class="card-action">
+                     <button class="readyToPickUp" data-id=${order.item_id} data-newready="1" href="#">Ready</button>
+                     <button class='orderIsDone' data-id=${order.item_id} href="#">Delete</button>
+                     </div>
+                     </div>
+                     </div>
+                     </div>
+                    </div>
+                    `;
+                                orders.appendChild(ordersBtn);
+                            } else {
+                                // let date = moment(order.time).utc().utcOffset(-8).format('LTS')
+                                // console.log(date) 
+                                var ordersBtn1 = document.createElement('div');
+                                ordersBtn1.innerHTML = `
+                     <div class="col s12 m4">
+                     <div class="row">
+                     <div class="col s12 m10">
+                     <div class="card red darken-1" data-id=${order.item_id}>
+                     <div class="card-content white-text">
+                     <span class="card-title">${order.item_name}</span>
+                     <p>Quantity: ${order.quantity}</p>
+                    //  <p>Was ordered at: ${moment(order.time).utc().utcOffset(-8).format('LTS')}</p>
+                     </div>
+                     <div class="card-action">
+                     <button class="readyToPickUp" data-id=${order.item_id} data-newready="1" href="#">Ready</button>
+                     <button class='orderIsDone' data-id=${order.item_id} href="#">Delete</button>
+                     </div>
+                     </div>
+                     </div>
+                     </div>
+                    </div>
+                    `;
+                                orders.appendChild(ordersBtn1);
+                            }
+                        });
+                    }).catch(err => console.log('err fetching restaurants', err));
+                }
+                decrement();
+                run();
+                // delete the order as it's done
+                $(document).on("click", ".orderIsDone", function (event) {
+                    // console.log("Hello!");
+                    var id = $(this).data("id");
+                    if (confirm("The order  #" + id + " is picked up!") == true) {
+                        $.ajax("/api/order/" + id, {
+                            type: "DELETE"
+                        }).then(function () {
+                            console.log("The order was picked up and thus deleted");
+                            location.reload();
+                            $(document).on("change", "#check", function (e) {
+                                $(this).is(":checked")
+                            });
+                        });
+                    } else {
+                        console.log("Nope! Waiting for its owner!  Not picked up yet! ")
+                    }
+                });
+                //change color of the button when the order is ready
+                $(document).on("click", ".readyToPickUp", function (event) {
+                    // console.log("Hello!");
+                    var id = $(this).data("id");
+                    if (confirm("The order  # " + id + " is ready!") == true) {
+                        console.log("about to change the stat to 'ready' in database and change color of the button");
+                        var readyStat = $(this).data("ready");
+                        var newReadyState = {
+                            ready: readyStat
+                        };
+                        $.ajax("/api/order/" + id, {
+                            type: "PUT",
+                            data: newReadyState
+                        }).then(function () {
+                            console.log("changed to ready in db");
+                            location.reload();
+                        });
+                    } else {
+                        console.log("Nope! Not ready yet!")
+                    }
+                    var count = 1;
+                    function setColor(btn, color) {
+                        var property = document.getElementByClass(readyToPickUp);
+                        if (count == 0) {
+                            property.style.backgroundColor = "#FFFFFF"
+                            count = 1;
+                        }
+                        else {
+                            property.style.backgroundColor = "#7FFF00"
+                            count = 0;
+                        }
+                    }
+                })
+            });
+        </script>
+</body>
+
+</html>

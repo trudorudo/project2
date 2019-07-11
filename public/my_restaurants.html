@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome to Fast Resataurant</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/materialize.css">
+    <script type="text/javascript" src="login.js"></script>
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery.js"></script>
+</head>
+
+<body>
+        <nav class="header-nav">
+                <div class="nav-wrapper ">
+                        <a href="https://jakal.herokuapp.com" class="brand-logo"><img src="assets/images/logo.png" style="width:50px; height:50px;margin-left: 4rem;" title="Jackal" alt="Jakal"></a>
+                    <!-- <a href="#" class="brand-logo">Logo</a> -->
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                       <i href="#" class="material-icons"     style="margin-right: 5rem; color: white;" >person_outline</i>
+                    </ul>
+                </div>
+        </nav>
+        <br>
+        <br>
+    <div class="container" style="border: 2px solid grey;padding: 1rem;">
+        <div class="row">
+            <h4 class="title">Jakal</h4>
+        </div>
+        <div class="row">
+            <ul class="collection"></ul>
+        </div>
+        <div class="qr"></div>
+        
+        <a href="/create-restaurant" class="waves-effect waves-teal btn-flat">Create new</a>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <footer class="page-footer">
+            <div class="container">
+              <div class="row">
+                <div class="col l6 s12">
+                  <h5 class="white-text">Contact US</h5>
+                  <p class="grey-text text-lighten-4">+1 (908) 1234</p>
+                  <p class="grey-text text-lighten-4">jacal@fastrest.com</p>
+                  <p class="grey-text text-lighten-4">Jersey City, Grand St. 3,647</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                  <h5 class="white-text">Links</h5>
+                  <ul>
+                    <li><a class="grey-text text-lighten-3" href="#!">About Us</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">FAQ</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">Investor Relations</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">Careers</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="footer-copyright">
+              <div class="container">
+                © 2019 JAKAL All rights reserved.
+        
+              </div>
+            </div>
+          </footer>
+
+    <script type="text/javascript">
+        var userId = localStorage.getItem('userId');
+        fetch(`/api/restaurants/owners/${userId}`).then(res => res.json()).then(restaurants => {
+            console.log('restaaaaa', restaurants);
+            var restaurantUl = document.querySelector('.collection')
+            restaurants.forEach(r => {
+                var restaurantLi = document.createElement('li');
+                restaurantLi.innerHTML = `
+                <li class="collection-item avatar">
+                <img src=${r.image_url} alt="" class="circle">
+                <a href=/owner-menu?restaurant_id=${r.restaurant_id}   data-id=${r.restaurant_id} class="title">${r.restaurant_name}</a>
+                <p>${r.location}</p>
+                    <br>
+                   <p> ${r.phone_number}
+                </p>
+                <a  href="#" class="secondary-content delete" data-id="${r.restaurant_id}"  ><i class="material-icons">delete</i></a>
+          
+            
+                <a href=https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=jakal.herokuapp.com/menu-items?restaurant_id=${r.restaurant_id} target="_blank">Generate QR Code</a>
+                <br>
+              
+                </li>
+                `;
+                restaurantUl.appendChild(restaurantLi)
+            });
+        }).catch(err => console.log('err fetching restaurants', err));
+
+        $(document).on("click", ".secondary-content", function (event) {
+            // console.log("hello!")
+            var id = $(this).data("id");
+            if (confirm("Do you want to delete menu " + id + "?") == true){
+                console.log("OK")
+            
+            // var id = $(this).data("id");
+            // console.log(id);
+            //delete request
+            $.ajax("/api/restaurants/" + id, {
+                type: "DELETE"
+            }).then(function () {
+                console.log("deleted restaurant", id);
+                // Reload the page to get the updated list
+                location.reload();
+            });
+        } else {
+            console.log("menu wasn't deleted!")
+        }
+        });
+
+    </script>
+</body>
+
+</html>
+
+<!-- <a  href="#" class="secondary-content update" data-id="${r.restaurant_id}"  style="padding-right: 3rem;" ><i class="material-icons" >update</i></a> -->

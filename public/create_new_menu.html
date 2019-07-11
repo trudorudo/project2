@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome to Fast Resataurant</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/materialize.css">
+
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+    <!-- Compiled and minified JavaScript -->
+</head>
+
+<body>
+    <div class="container" style="border: 2px solid grey;padding: 1rem;">
+        <!-- menu items will be appended here -->
+        <h3 class="title">Menu:</h3>
+        <div class="row" id="menu">
+            <!-- <ul id="menu_item"></ul>  -->
+        </div>
+        <hr>
+
+        <p id="id"></p>
+        <!-- form to add new items -->
+
+        <div class="row" id="menu-inf">
+            <div class="row">
+                <form class="col s12" id="add-new-item">
+                    <div class="input-field col s10 m6">
+                        <i class="material-icons prefix">restaurant_id</i>
+                        <select id="restaurant" class="validate">
+
+                        </select>
+                        <label for="restaurant">Restaurant</label>
+                    </div>
+
+                    <div class="input-field col s10 m6">
+                        <select id="category">
+                            <option value="" disabled selected>Choose your category</option>
+                            <option value="appetizer's">Appetizer</option>
+                            <option value="entrees">Entree</option>
+                            <option value="beverages">Beverage</option>
+                            <option value="deserts">Dessert</option>
+                            <option value="sides">Sides</option>
+                        </select>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="input-field col s10 m6">
+                            <i class="material-icons prefix">restaurant_menu</i>
+                            <input id="item_name" type="text" class="validate">
+                            <label for="item_name">Name of the Item</label>
+                        </div>
+                        <div class="input-field col s10 m3">
+                            <i class="material-icons prefix">attach_money</i>
+                            <input id="price" type="tel" class="validate">
+                            <label for="price">Price</label>
+                        </div>
+                        <!-- <div class="input-field col s10 m3">
+                            <i class="material-icons prefix">restaurant_id</i>
+                            <select id="restaurant" class="validate">
+
+                            </select>
+                            <label for="restaurant">Restaurant</label>
+                        </div> -->
+                    </div>
+                    <div class="input-field col s10 m9">
+                        <i class="material-icons prefix">monochrome_photos</i>
+                        <input id="image_url" type="text" class="validate">
+                        <label for="image_url">Image Url</label>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12 m10">
+                            <i class="material-icons prefix">list</i>
+                            <textarea id="ingredients" class="materialize-textarea"></textarea>
+                            <label for="ingredients">Description</label>
+
+                        </div>
+                        <div class="col s12 m2">
+                            <button class="btn-floating btn-large waves-effect waves-light red" type="submit"
+                                name="action"><i class="material-icons">add</i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <a href="/my-restaurants" class="waves-effect waves-light btn">Submit Menu</a>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="text/javascript" src="assets/js/script.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //$('select').formSelect();
+
+            var userId = localStorage.getItem('userId');
+            fetch(`/api/restaurants/owners/${userId}`).then(res => res.json()).then(restaurants => {
+                var restaurantSelect = document.querySelector("#restaurant")
+                console.log('restaaaaa', restaurants);
+                restaurants.reverse().forEach(r => {
+                    const optionItem = document.createElement('option');
+                    optionItem.value = r.restaurant_id;
+                    optionItem.textContent = r.restaurant_name;
+                    restaurantSelect.appendChild(optionItem)
+                    $('select').formSelect();
+                });
+            }).catch(err => console.log('err fetching restaurants', err));
+
+            $("#add-new-item").on("submit", function (event) {
+                event.preventDefault();
+
+                var newItem = {
+                    restaurant_id: $("#restaurant").val().trim(),
+                    item_name: $("#item_name").val().trim(),
+                    price: $("#price").val().trim(),
+                    image_url: $("#image_url").val().trim(),
+                    ingredients: $("#ingredients").val().trim(),
+                    category: $("#category").val().toString(),
+                };
+
+                // console.log(newItem.category);
+                //append new item in collapsible(materialize)
+                var i = $("<ul class='collapsible'></ul>");
+                var li = $("<li></li>");
+                i.append(li);
+                $("#menu").append(i);
+                var h = $("<div class='collapsible-header' id='new_item_name'>Name of the item: </div>");
+                li.append(h);
+                h.append(newItem.item_name);
+                var b = $("<div class='collapsible-body'></div>");
+                li.append(b);
+                var category = $("<p id ='category_new'> Category: </p>");
+                var ingr = $("<p id='ingredients_new'>Description: </p> ");
+                var p = $("<p id='price_new'>Price: </p>");
+
+                b.append(category);
+                b.append(ingr);
+                b.append(p);
+
+
+                category.append(newItem.category)
+                p.append(newItem.price);
+                p.append("$");
+                ingr.append(newItem.ingredients);
+                $('.collapsible').collapsible();
+
+                $("#item_name").val(" "),
+                    $("#price").val(" "),
+                    $("#image_url").val(" "),
+                    $("#ingredients").val(" ")
+
+                console.log("About to post to DB");
+                $.ajax("/api/menu-items", {
+                    type: "POST",
+                    data: newItem
+                }).then(function () {
+                    console.log("new item was added");
+
+                    // window.location.href = '/menu-items'
+                    // location.reload();
+
+                })
+
+            });
+        });
+    </script>
+</body>
+
+</html>
