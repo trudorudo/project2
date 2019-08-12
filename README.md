@@ -8,7 +8,7 @@ The app allows on the user site simply get the menu on their phone by scanning Q
 
 # Built With
 * materialize
-* QR Code API - Auto Genration
+* QR Code API - Auto Generation
 * Template Literal Coding Method
 * MySQL
 * momentjs
